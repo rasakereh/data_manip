@@ -10,6 +10,15 @@ FIRST_YEAR = 1979
 BIAS_COUNT = 4
 BQ = int(24 / BIAS_COUNT)
 
+def trend(mat2d):
+	res = np.zeros((mat2d.shape[0], 1))
+	X = list(range(mat2d.shape[1]))
+	for i in range(mat2d.shape[0]):
+		res[i, 0] = np.polyfit(X, mat2d[i], 1)[0]
+	
+	return res
+
+
 task_a = np.zeros((BIAS_COUNT, CITIES_COUNT, YEAR_COUNT))
 task_b = np.zeros((BIAS_COUNT, CITIES_COUNT, 12))
 task_c = np.zeros((CITIES_COUNT, YEAR_COUNT))
@@ -31,14 +40,26 @@ for curr_m in range(1, 13):
 		print("writing:", OUT_PATH, end='\t')
 		np.savetxt(OUT_PATH, task_a[bias], fmt="%.1f", delimiter='\t')
 		print("done")
+		OUT_PATH = OUT_DIR + "taskA_" + str(curr_m).zfill(2) + "_" + str(bias*BQ).zfill(2) + "_trend.txt"
+		print("writing:", OUT_PATH, end='\t')
+		np.savetxt(OUT_PATH, trend(task_a[bias]), fmt="%.4f", delimiter='\t')
+		print("done")
 	task_b[:, :, curr_m-1] = task_a.sum(axis=2)/YEAR_COUNT
 	OUT_PATH = OUT_DIR + "taskC_" + str(curr_m).zfill(2) + ".txt"
 	print("writing:", OUT_PATH, end='\t')
 	np.savetxt(OUT_PATH, task_c, fmt="%.1f", delimiter='\t')
 	print("done")
+	OUT_PATH = OUT_DIR + "taskC_" + str(curr_m).zfill(2) + "_trend.txt"
+	print("writing:", OUT_PATH, end='\t')
+	np.savetxt(OUT_PATH, trend(task_c), fmt="%.1f", delimiter='\t')
+	print("done")
 for bias in range(BIAS_COUNT):
 	OUT_PATH = OUT_DIR + "taskB_" + str(bias*BQ).zfill(2) + ".txt"
 	print("writing:", OUT_PATH, end='\t')
 	np.savetxt(OUT_PATH, task_b[bias], fmt="%.1f", delimiter='\t')
+	print("done")
+	OUT_PATH = OUT_DIR + "taskB_" + str(bias*BQ).zfill(2) + "_trend.txt"
+	print("writing:", OUT_PATH, end='\t')
+	np.savetxt(OUT_PATH, trend(task_b[bias]), fmt="%.4f", delimiter='\t')
 	print("done")
 	
