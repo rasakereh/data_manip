@@ -24,8 +24,8 @@ for curr_m in range(1, 13):
 			curr_m_data = np.loadtxt(FILE_PATH)
 			days = curr_m_data.shape[1]>>2
 		for bias in range(BIAS_COUNT):
-			task_a[bias, :, curr_y] = curr_m_data[:, [(i<<2)+bias for i in range(days)]].sum(axis=1)/days
-		task_c[:, curr_y] = curr_m_data.sum(axis=1)/(days<<2)
+			task_a[bias, :, curr_y] = np.nanmean(curr_m_data[:, [(i<<2)+bias for i in range(days)]], axis=1)
+		task_c[:, curr_y] = np.nanmean(curr_m_data, axis=1)
 	for bias in range(BIAS_COUNT):
 		OUT_PATH = OUT_DIR + "taskA_" + str(curr_m).zfill(2) + "_" + str(bias*BQ).zfill(2) + ".txt"
 		print("writing:", OUT_PATH, end='\t')
